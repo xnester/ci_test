@@ -11,7 +11,9 @@ class MContacts extends CI_Model
 		$data=array(
 		'name'=>$this->security->xss_clean($this->input->post('name')),
 		'email'=>$this->security->xss_clean($this->input->post('email')),
-		'notes'=>$this->security->xss_clean($this->input->post('notes'))
+		'notes'=>$this->security->xss_clean($this->input->post('notes')),
+		'ipaddress'=>'',
+		'stamp'=>$now
 		);
 		$this->db->insert('contacts',$data);
 	}
