@@ -1,0 +1,6 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|assets|robots\.txt)
+# For user_guide folder
+RewriteCond $1 !^(user_guide)
+
+RewriteRule ^(.*)$ ./index.php/$1 [L]
