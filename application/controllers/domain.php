@@ -122,4 +122,5 @@ class Domain extends CI_Controller
 			return $return;
 		}
 	}
+	
 }
