@@ -1,7 +1,7 @@
 <h3>Edit Domain</h3>
 <?php 
 echo anchor('domain','back');
-echo form_open('domain/savedomain');
+echo form_open('domain/save');
 
 $idata= array('id'=>$row->id);
 echo form_hidden($idata);
@@ -13,6 +13,10 @@ echo form_input($ddata);
 echo form_label('Created','created');
 $cdata= array('id'=>'created','name'=>'created','size'=>'25','value'=>$row->created);
 echo form_input($cdata);
+
+echo form_label('Changed','changed');
+$chdata= array('id'=>'changed','name'=>'changed','size'=>'25','value'=>$row->changed);
+echo form_input($chdata);
 
 echo form_label('Expires','expires');
 $edata= array('id'=>'exoires','name'=>'expires','size'=>'25','value'=>$row->expires);

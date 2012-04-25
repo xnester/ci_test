@@ -21,15 +21,16 @@ class Domain extends CI_Controller
 		
 		$this->pagination->initialize($config); 
 	}
-	/**
-	 * getAutoWhois
-	 * @param string $domain
-	 */
 	function getAutoWhois($domain)
 	{
-		
+		// get whois domain
+		//$this->load->library('phpwhois/whois','','LWhois');
+		//$result=$this->LWhois->Lookup($domain);
+		//print_r($result);
+		//echo $this->showObject($result);
+		//return $result;
 	}
-	function newdomain()
+	function addnew()
 	{
 		$data['title']='Add New Domain';
 		$data['headline']='Welcome!';
@@ -38,28 +39,39 @@ class Domain extends CI_Controller
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
-	function savenewdomain()
+	function savenew()
 	{
-		if($this->input->post('domain'))
+		$domain=$this->input->post('domain');
+		$result=$this->MDomains->checkExists($domain);
+		
+		if(!$result)
 		{
-			$this->MDomains->addDomain();
-			redirect('domain/','refresh');
+			//echo 'Doesn\'t Exists!';
+			if($domain)
+			{
+				$this->MDomains->addDomain();
+				redirect('domain/','refresh');
+			}else{
+				echo 'Please insert data.';
+				redirect('domain/addnew','refresh');
+			}
 		}else{
-			redirect('domain/newdomain','refresh');
+			echo $result->name;
+			echo '<br>Exists!';
 		}
 	}
-	function editdomain($id)
+	function edit($id)
 	{
-		$data['title']='Edit Domain';
+		$data['row']=$this->MDomains->getdomain($id);
+		
+		$data['title']='Edit Domain: ';
 		$data['headline']='Welcome!';
 		$data['include']='domain_edit';
-		
-		$data['row']=$this->MDomains->getdomain($id);
 		
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
-	function savedomain()
+	function save()
 	{
 		$id=$this->security->xss_clean($this->input->post('id'));
 		if($this->input->post('domain'))
@@ -68,6 +80,13 @@ class Domain extends CI_Controller
 			redirect('domain/','refresh');
 		}else{
 			redirect('domain/editdomain','refresh');
+		}
+	}
+	function del($id)
+	{
+		if($this->MDomains->deleteDomain($id))
+		{
+			
 		}
 	}
 	function page($offset=0)
@@ -86,13 +105,7 @@ class Domain extends CI_Controller
 	}
 	function index()
 	{	
-		//get whois domain
-		$this->load->library('phpwhois/whois','','LWhois');
-		$result=$this->LWhois->Lookup('ji-net.co.th');
-		//print_r($result);
-		//echo $this->showObject($result);
-		
-		//split page and add pagination
+		// split page and add pagination
 		$this->page();
 		
 		/*$data['title']='Add New Domain';
@@ -103,11 +116,22 @@ class Domain extends CI_Controller
 		$this->load->view('template');
 		*/
 	}
+	/**
+	 * showObject
+	 * Disply whois raw data
+	 * @param $obj 
+	 */
 	function showObject(&$obj)
 	{
 		$r = $this->debugObject($obj);
 		return "<pre>$r</pre>\n";
 	}
+	/**
+	 * debugObject
+	 * Expand data in array
+	 * @param $obj
+	 * @param $indent
+	 */
 	function debugObject($obj,$indent=0)
 	{
 		if (is_Array($obj))

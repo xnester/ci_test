@@ -1,7 +1,7 @@
 <h3>Add New Domain</h3>
 <?php 
 echo anchor('domain','back');
-echo form_open('domain/savenewdomain');
+echo form_open('domain/savenew');
 echo form_label('Domain name','domain');
 $ddata= array('id'=>'domain','name'=>'domain','size'=>'25');
 echo form_input($ddata);
@@ -10,8 +10,13 @@ echo form_label('Created','created');
 $cdata= array('id'=>'created','name'=>'created','size'=>'25');
 echo form_input($cdata);
 
+echo form_label('Changed','changed');
+$chdata= array('id'=>'changed','name'=>'changed','size'=>'25');
+echo form_input($chdata);
+
+
 echo form_label('Expires','expires');
-$edata= array('id'=>'exoires','name'=>'expires','size'=>'25');
+$edata= array('id'=>'expires','name'=>'expires','size'=>'25');
 echo form_input($edata);
 
 echo form_label('Registrar','registrar');

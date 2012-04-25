@@ -1,5 +1,5 @@
 <?php
-echo anchor('domain/newdomain','Add New Domain');
+echo anchor('domain/addnew','Add New Domain');
 echo '<br>';
 echo $this->pagination->create_links();
 ?>
@@ -30,7 +30,7 @@ foreach ($query->result() as $row)
     <td>'.$row->changed.'</td>
     <td>'.$row->nserver.'</td>
     <td>'.$row->client_id.'</td>
-    <td>'.anchor('domain/editdomain/'.$row->id,'edit').'</td>
+    <td>'.anchor('domain/edit/'.$row->id,'edit').'   '.anchor('domain/del/'.$row->id,'del').'</td>
     </tr>';
 	$i++;
 }
