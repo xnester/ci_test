@@ -1,0 +1,6 @@
+@CHARSET "UTF-8";
+.loading{
+  background-image:url('../img/indicator.gif');
+  background-position:right;
+  background-repeat:no-repeat;
+}

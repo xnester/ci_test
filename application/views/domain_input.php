@@ -1,10 +1,17 @@
 <h3>Add New Domain</h3>
 <?php 
 echo anchor('domain','back');
-echo form_open('domain/savenew');
+
+$attributes = array('id' => 'form_add');
+echo form_open('domain/savenew',$attributes);
+
 echo form_label('Domain name','domain');
 $ddata= array('id'=>'domain','name'=>'domain','size'=>'25');
 echo form_input($ddata);
+
+// Whois Button
+$wdata=array('id'=>'bwhois','name'=>'bwhois','type'=>'button','value'=>'Whois');
+echo form_input($wdata);
 
 echo form_label('Created','created');
 $cdata= array('id'=>'created','name'=>'created','size'=>'25');

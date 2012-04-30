@@ -4,8 +4,7 @@
  * @author SPornchai
  * 
  */
-class Domain extends CI_Controller
-{
+class Domain extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
@@ -13,25 +12,23 @@ class Domain extends CI_Controller
 		$this->load->library('pagination');
 		
 		//Pagination
+		$this->db->where('status', 'Active');
+		//$this->db->count_all('domains');
+		$this->db->from('domains');
+		$all= $this->db->count_all_results();
+		
 		$config['base_url'] = base_url().'domain/page/';
-		$config['total_rows'] = $this->db->count_all('domains');
+		$config['total_rows'] = $all;
 		$config['per_page'] = 50;
 		$config['num_links'] = 10;
 		//$config['use_page_numbers'] = TRUE;
 		
 		$this->pagination->initialize($config); 
 	}
-	function getAutoWhois($domain)
-	{
-		// get whois domain
-		//$this->load->library('phpwhois/whois','','LWhois');
-		//$result=$this->LWhois->Lookup($domain);
-		//print_r($result);
-		//echo $this->showObject($result);
-		//return $result;
-	}
 	function addnew()
 	{
+		// Load View edit form
+		
 		$data['title']='Add New Domain';
 		$data['headline']='Welcome!';
 		$data['include']='domain_input';
@@ -41,29 +38,36 @@ class Domain extends CI_Controller
 	}
 	function savenew()
 	{
-		$domain=$this->input->post('domain');
-		$result=$this->MDomains->checkExists($domain);
+		$data=array(
+			'name'=>$this->security->xss_clean($this->input->post('domain')),
+			'created'=>$this->security->xss_clean($this->input->post('created')),
+			'expires'=>$this->security->xss_clean($this->input->post('expires')),
+			'changed'=>$this->security->xss_clean($this->input->post('changed')),
+			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
+			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
+		);
 		
-		if(!$result)
+		if(!$this->MDomains->checkExists($data['name']))
 		{
 			//echo 'Doesn\'t Exists!';
-			if($domain)
+			if($data['name'])
 			{
-				$this->MDomains->addDomain();
+				$this->MDomains->addDomain($data);
 				redirect('domain/','refresh');
 			}else{
 				echo 'Please insert data.';
 				redirect('domain/addnew','refresh');
 			}
 		}else{
-			echo $result->name;
-			echo '<br>Exists!';
+			echo anchor('domain/','Back');
+			echo '<br>Domain Exists!';
 		}
 	}
 	function edit($id)
 	{
 		$data['row']=$this->MDomains->getdomain($id);
 		
+		// Load View edit form
 		$data['title']='Edit Domain: ';
 		$data['headline']='Welcome!';
 		$data['include']='domain_edit';
@@ -74,9 +78,18 @@ class Domain extends CI_Controller
 	function save()
 	{
 		$id=$this->security->xss_clean($this->input->post('id'));
-		if($this->input->post('domain'))
+		$data=array(
+			'name'=>$this->security->xss_clean($this->input->post('domain')),
+			'created'=>$this->security->xss_clean($this->input->post('created')),
+			'expires'=>$this->security->xss_clean($this->input->post('expires')),
+			'changed'=>$this->security->xss_clean($this->input->post('changed')),
+			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
+			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
+		);
+		
+		if($data['name'])
 		{
-			$this->MDomains->updateDomain($id);
+			$this->MDomains->updateDomain($id,$data);
 			redirect('domain/','refresh');
 		}else{
 			redirect('domain/editdomain','refresh');
@@ -84,9 +97,11 @@ class Domain extends CI_Controller
 	}
 	function del($id)
 	{
-		if($this->MDomains->deleteDomain($id))
+		//if($this->MDomains->deleteDomain($id))
+		if($id)
 		{
-			
+			echo 'Del'.$id;	
+			echo anchor('domain/','Back');		
 		}
 	}
 	function page($offset=0)
@@ -103,48 +118,66 @@ class Domain extends CI_Controller
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
-	function index()
-	{	
-		// split page and add pagination
-		$this->page();
-		
-		/*$data['title']='Add New Domain';
-		$data['headline']='Welcome!';
-		$data['include']='vdomain';
-		
-		$this->load->vars($data);
-		$this->load->view('template');
-		*/
-	}
-	/**
-	 * showObject
-	 * Disply whois raw data
-	 * @param $obj 
-	 */
-	function showObject(&$obj)
+	function sendmail($id)
 	{
-		$r = $this->debugObject($obj);
-		return "<pre>$r</pre>\n";
-	}
-	/**
-	 * debugObject
-	 * Expand data in array
-	 * @param $obj
-	 * @param $indent
-	 */
-	function debugObject($obj,$indent=0)
-	{
-		if (is_Array($obj))
+		$this->load->library('email');
+		$config['protocol'] = 'smtp';
+		$config['smtp_host'] = 'mail.ji-net.com';
+		$config['smtp_user'] = '';
+		$config['smtp_pass'] = '';
+		$config['mailtype'] = 'html';
+		$config['wordwrap'] = TRUE;
+		$this->email->initialize($config);
+		
+		if($id)
 		{
-			$return = '';
-			foreach($obj as $k => $v)
-			{
-				$return .= str_repeat('&nbsp;',$indent);
-				$return .= '<b>'.$k.'</b>'."->$v\n";
-				$return .= $this->debugObject($v,$indent+1);
-			}
-			return $return;
+			$this->email->from('domain-adm@ji-net.com', 'Domain-ADM');
+			$this->email->to('pornchai.si@jasmine.com'); 
+			
+			$row=$this->MDomains->getdomain($id);
+			$data='<p>'.$row->name.'</p>';
+			$data.='<p>'.$row->created.'</p>';
+			$data.='<p>'.$row->expires.'</p>';
+			$data.='<p>'.$row->changed.'</p>';
+	
+			
+			$this->email->subject('Email Test');
+			$this->email->message('Testing the email class from Codeigniter.<br>'.$data); 
+			$this->email->send();
+			
+			echo $this->email->print_debugger();
+		}else{
+			echo 'No id';
 		}
 	}
+		function whois($domain)
+	{
+		//$domain=$this->security->xss_clean($this->input->post('domain'));
+		if($domain)
+		{
+			$this->load->library('Autowhois','','AWhois');
+			$result=$this->AWhois->Whois($domain);
+			if($result)
+			{
+				echo '1';
+				//print_r($result);
+				//echo $this->AWhois->showObject($result);
+			}else{
+				echo '0';
+			}		
+			
+		}else{echo'whois page';}
+	}
 	
+	function index()
+	{	
+		
+		
+		// split page and add pagination
+		$this->page();
+
+	}
 }
+
+/* End of file domain.php */
+/* Location: ./application/controllers/domain.php */

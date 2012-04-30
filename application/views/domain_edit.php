@@ -1,7 +1,8 @@
 <h3>Edit Domain</h3>
 <?php 
 echo anchor('domain','back');
-echo form_open('domain/save');
+$attributes = array('id' => 'form_edit');
+echo form_open('domain/save',$attributes);
 
 $idata= array('id'=>$row->id);
 echo form_hidden($idata);
