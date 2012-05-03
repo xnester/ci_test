@@ -161,10 +161,10 @@ class Domain extends CI_Controller {
 			{
 				echo '1';
 				//print_r($result);
-				//echo $this->AWhois->showObject($result);
-			}else{
+				echo $this->AWhois->showObject($result);
+			}else {
 				echo '0';
-			}		
+			}	
 			
 		}else{echo'whois page';}
 	}
