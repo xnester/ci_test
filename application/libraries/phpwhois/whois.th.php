@@ -40,8 +40,8 @@ class th_handler
  				'domain.changed' => 'Updated date:',
                 'domain.expires' => 'Exp date:',
                 'domain.nserver' => 'Name servers:',
-                'domain.status'	 => 'Status:',
-				'domain.sponsor' => 'Registrar:'
+                'domain.status'	 => 'Status:'
+				/*'domain.sponsor' => 'Registrar:'*/
 				
 				/*'owner'			 => 'Domain Holder:',
 				'tech'			 => 'Tech Contact:'
@@ -49,6 +49,8 @@ class th_handler
 				
 		       );
 		$r['regrinfo'] = get_blocks($data_str['rawdata'], $items);
+		// registrar
+		$r['regyinfo'] = get_blocks($data_str['rawdata'], array('registrar'=>'Registrar:'));
 		return $r;
 
 		
