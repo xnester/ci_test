@@ -25,9 +25,12 @@ class Ajax extends CI_Controller {
 			$result=$this->AWhois->Whois($domain);
 			if($result)
 			{
-				echo '1';
+				//echo '1';
 				//print_r($result);
 				//echo $this->AWhois->showObject($result);
+				
+				echo json_encode($result);
+				
 			}		
 			
 		}else{echo'whois page';}
