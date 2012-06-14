@@ -1,9 +1,8 @@
-<h3>Add New Domain</h3>
 <?php 
 	echo anchor('client','back');
 	
-	$attributes = array('id' => 'form_client');
-	echo form_open('client/save',$attributes);
+	$attributes = array('id' => 'form_client_edit');
+	echo form_open('client/update',$attributes);
 
 	// an array of the fields in the student table
 	$field_array = array(	
@@ -13,12 +12,11 @@
 		'phone'	=>	'Phone'
 	);
 
-	//echo form_hidden('id', $uid);
-	
+	echo form_hidden('id',$row->id);
 	foreach($field_array as $field => $label) {
 		echo '<p>';
 		echo form_label($label, $field);
-		echo form_input(array('id' => $field,'name' => $field, 'value' => set_value($field)));
+		echo form_input(array('id' => $field,'name' => $field, 'value' => set_value($field,$row->$field)));
 		echo '</p>';
 	}
 	
@@ -34,6 +32,7 @@
 	echo form_dropdown('seller', $options, 'large');
 	echo '</p>';
 	
-	echo form_submit('submit','Add');
+	echo form_submit('submit','Update');
 	echo form_close();
+	echo 'Last Edit: '.$row->modified;
 ?>
