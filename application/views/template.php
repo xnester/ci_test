@@ -8,9 +8,13 @@
 </head>
 <body>
 <div id="nav">
-<a href="domain">Domains</a> | <a href="client">Clients</a> | <a href="dealer">SalesPerson</a>
+<a href="<?php echo base_url();?>domain">Domains</a> | <a href="<?php echo base_url();?>client">Clients</a> | <a href="<?php echo base_url();?>dealer">SalesPerson</a>
+| <a href="<?php echo base_url();?>host">Hosts</a>
+
 </div>
 <h1><?php echo $headline;?></h1>
 <?php echo $this->load->view($include);?>
+
+<p class="footer">Page rendered in <strong>{elapsed_time}</strong> seconds</p>
 </body>
 </html>

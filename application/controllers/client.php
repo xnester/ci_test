@@ -78,7 +78,7 @@ class Client extends CI_Controller
 		
 		// generate HTML table from query results
 		$tmpl = array (
-			'table_open' => '<table>',
+			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
 			'heading_row_start' => '<tr class="table_header">',
 			'row_start' => '<tr class="odd_row">' 
 		);

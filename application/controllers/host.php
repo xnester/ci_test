@@ -19,7 +19,7 @@ class Host extends CI_Controller
 		
 		// generate HTML table from query results
 		$tmpl = array (
-			'table_open' => '<table>',
+			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
 			'heading_row_start' => '<tr class="table_header">',
 			'row_start' => '<tr class="odd_row">' 
 		);
@@ -114,6 +114,7 @@ class Host extends CI_Controller
 		$data=array(
 			'name'=>$this->security->xss_clean($this->input->post('name')),
 			'space'=>$this->security->xss_clean($this->input->post('space')),
+			'desc'=>$this->security->xss_clean($this->input->post('desc')),
 			'status'=>$this->security->xss_clean($this->input->post('status'))
 		);
 		if($data['name'])

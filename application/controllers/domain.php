@@ -5,6 +5,7 @@
  * 
  */
 class Domain extends CI_Controller {
+	private $per_page=50;
 	function __construct()
 	{
 		parent::__construct();
@@ -19,7 +20,7 @@ class Domain extends CI_Controller {
 		
 		$config['base_url'] = base_url().'domain/page/';
 		$config['total_rows'] = $all;
-		$config['per_page'] = 50;
+		$config['per_page'] = $this->per_page;
 		$config['num_links'] = 10;
 		//$config['use_page_numbers'] = TRUE;
 		
@@ -106,11 +107,50 @@ class Domain extends CI_Controller {
 	}
 	function page($offset=0)
 	{
-		//echo $offset;
-		
+		$this->load->library('table');
 		$data['offset']=$offset;
-		$data['query']=$this->MDomains->getallDomain(50,$offset);
+		$query=$this->MDomains->getallDomain($this->per_page,$offset);
+		// generate HTML table from query results
+		$tmpl = array (
+			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+			'heading_row_start' => '<tr class="table_header">',
+			'row_start' => '<tr class="odd_row">' 
+		);
+		$this->table->set_template($tmpl); 
 		
+		$this->table->set_empty("&nbsp;"); 
+		
+		$this->table->set_heading('No.','Name', 'Registrar', 'Created', 'Expires', 'Changed','NS',
+   'Client','Action');
+		
+		$table_row = array();
+		$i=1+$offset;
+		foreach ($query->result() as $domains) {
+
+			$table_row = NULL;
+			$table_row[] = $i;
+			$table_row[] = htmlspecialchars($domains->name);
+			$table_row[] = htmlspecialchars($domains->registrar);
+			$table_row[] = htmlspecialchars($domains->created);
+			$table_row[] = htmlspecialchars($domains->expires);
+			$table_row[] = htmlspecialchars($domains->changed);
+			$table_row[] = $domains->nserver;
+			$table_row[] = $domains->client_id;
+			//$table_row[] = mailto($domains->email);
+			$table_row[] = '<span style="white-space: nowrap">' . 
+			anchor('client/edit/' . $domains->id, 'edit') . ' | ' .
+			anchor('student/delete/' . $domains->id, 'delete',
+				"onclick=\" return confirm('Are you sure you want to '
+				+ 'delete the record for ".addslashes($domains->name)."?')\"") .
+				'</span>';
+			$this->table->add_row($table_row);
+			
+			$i++;
+		}    
+		
+		$students_table = $this->table->generate();
+		
+		$data['data_table'] = $students_table;
 		$data['title']='Add New Domain';
 		$data['headline']='Welcome!';
 		$data['include']='vdomain';
