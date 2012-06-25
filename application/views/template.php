@@ -7,6 +7,9 @@
 <style type="text/css">label{display:block;}</style>
 </head>
 <body>
+<div id="nav">
+<a href="domain">Domains</a> | <a href="client">Clients</a> | <a href="dealer">SalesPerson</a>
+</div>
 <h1><?php echo $headline;?></h1>
 <?php echo $this->load->view($include);?>
 </body>

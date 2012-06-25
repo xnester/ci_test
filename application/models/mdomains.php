@@ -62,6 +62,5 @@ class MDomains extends CI_Model
 		}
 	}
 }
-
 /* End of file mdomains.php */
 /* Location: ./application/models/mdomains.php */

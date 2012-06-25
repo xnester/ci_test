@@ -49,4 +49,4 @@ class MClients extends CI_Model
 	}
 }
 /* End of file mclients.php */
-/* Location: ./application/controllers/mclients.php */
+/* Location: ./application/models/mclients.php */
