@@ -6,18 +6,18 @@ $(document).ready(function() {
   /* USERNAME VALIDATION */
   // use element id=username 
   // bind our function to the element's onblur event
-  $('#form_add').find('#domain').blur(function() {
+  $('#form_add').find('#name').blur(function() {
 
     // get the value from the username field                              
-    var domain = $('#domain').val();
+    var domain = $('#name').val();
     
-    if($('#domain').val() == ''){
+    if($('#name').val() == ''){
     	$('#bad_domain').replaceWith('');
     }else{
     // Ajax request sent to the CodeIgniter controller "ajax" method "username_taken"
     // post the username field's value
     $.post('/ci_test/ajax/domain_taken',
-      { 'domain':domain },
+      { 'name':domain },
     
       // when the Web server responds to the request
       function(result) {
@@ -39,21 +39,21 @@ $(document).ready(function() {
   });  
   
   // Whois
-  $('#form_add').find('#bwhois').click(function(){ 
+  $('#bwhois').click(function(){ 
 	  
-	  var domain = $('#domain').val();
+	  var domain = $('#name').val();
 	  var nserver='';
 	  if(domain != ''){
 		  // first show the loading animation
-		  $('#domain').addClass('loading');
+		  $('#name').addClass('loading');
 		  $.post('/ci_test/ajax/whois',
-			{ 'domain':domain},			
+			{ 'name':domain},			
 			// when the Web server responds to the request
 		      function(result) {       
 		        // if the result is TRUE write a message to the page
 		        if (result) {
 		        	
-		        	$('#domain').removeClass('loading');
+		        	$('#name').removeClass('loading');
 		        	
 		        	// parse whois data
 					var data = jQuery.parseJSON(result);
@@ -66,7 +66,7 @@ $(document).ready(function() {
 			        $.each(data.regrinfo.domain.nserver, function(index, value) { 
 			        	//alert(index + ': ' + value); 
 			        	//$('#nserver').val(index);	
-			        	nserver+=index+',';
+			        	nserver+=index+'\n';
 			        	//$('#nserver').replaceWith('');
 			        	//$('#nserver').append('<input type="text" name="nserver[]" value="'+index+'" />');
 			        });

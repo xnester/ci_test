@@ -40,10 +40,10 @@ class Domain extends CI_Controller {
 	function savenew()
 	{
 		$data=array(
-			'name'=>$this->security->xss_clean($this->input->post('domain')),
-			'created'=>$this->security->xss_clean($this->input->post('created')),
-			'expires'=>$this->security->xss_clean($this->input->post('expires')),
-			'changed'=>$this->security->xss_clean($this->input->post('changed')),
+			'name'=>$this->security->xss_clean($this->input->post('name')),
+			'created'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('created')))),
+			'expires'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('expires')))),
+			'changed'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('changed')))),
 			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
 			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
 		);
@@ -57,7 +57,8 @@ class Domain extends CI_Controller {
 				redirect('domain/','refresh');
 			}else{
 				echo 'Please insert data.';
-				redirect('domain/addnew','refresh');
+				echo anchor('domain/addnew','Back');
+				//redirect('domain/addnew','refresh');
 			}
 		}else{
 			echo anchor('domain/','Back');
@@ -80,10 +81,10 @@ class Domain extends CI_Controller {
 	{
 		$id=$this->security->xss_clean($this->input->post('id'));
 		$data=array(
-			'name'=>$this->security->xss_clean($this->input->post('domain')),
-			'created'=>$this->security->xss_clean($this->input->post('created')),
-			'expires'=>$this->security->xss_clean($this->input->post('expires')),
-			'changed'=>$this->security->xss_clean($this->input->post('changed')),
+			'name'=>$this->security->xss_clean($this->input->post('name')),
+			'created'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('created')))),
+			'expires'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('expires')))),
+			'changed'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('changed')))),
 			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
 			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
 		);
@@ -138,8 +139,8 @@ class Domain extends CI_Controller {
 			$table_row[] = $domains->client_id;
 			//$table_row[] = mailto($domains->email);
 			$table_row[] = '<span style="white-space: nowrap">' . 
-			anchor('client/edit/' . $domains->id, 'edit') . ' | ' .
-			anchor('student/delete/' . $domains->id, 'delete',
+			anchor('domain/edit/' . $domains->id, 'edit') . ' | ' .
+			anchor('domain/delete/' . $domains->id, 'delete',
 				"onclick=\" return confirm('Are you sure you want to '
 				+ 'delete the record for ".addslashes($domains->name)."?')\"") .
 				'</span>';
