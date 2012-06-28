@@ -28,7 +28,6 @@ class Ajax extends CI_Controller {
 				//echo '1';
 				//print_r($result);
 				//echo $this->AWhois->showObject($result);
-				
 				echo json_encode($result);
 				
 			}		

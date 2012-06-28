@@ -39,7 +39,7 @@ class th_handler
                 'domain.created' => 'Created date:',
  				'domain.changed' => 'Updated date:',
                 'domain.expires' => 'Exp date:',
-                'domain.nserver' => 'Name servers:',
+                'domain.nserver' => 'Name Server:',
                 'domain.status'	 => 'Status:'
 				/*'domain.sponsor' => 'Registrar:'*/
 				

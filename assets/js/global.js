@@ -37,6 +37,14 @@ $(document).ready(function() {
     );
     }
   });  
+  $('#form_add').find('#name').change(function() {
+	  $('#created').val('');
+	  $('#changed').val('');
+	  $('#expires').val('');
+	  $('#registrar').val('');
+	  $('#nserver').val('');
+	  $('#divResult').val('');
+  });
   
   // Whois
   $('#bwhois').click(function(){ 
@@ -46,6 +54,7 @@ $(document).ready(function() {
 	  if(domain != ''){
 		  // first show the loading animation
 		  $('#name').addClass('loading');
+
 		  $.post('/ci_test/ajax/whois',
 			{ 'name':domain},			
 			// when the Web server responds to the request
@@ -71,9 +80,25 @@ $(document).ready(function() {
 			        	//$('#nserver').append('<input type="text" name="nserver[]" value="'+index+'" />');
 			        });
 			        $('#nserver').val(nserver);
+			        
+			        //raw whois
+			        
+			        var items = [];
+			        	  $.each(data.rawdata, function(key, val) {
+			        		  items.push(val+'\n');
+			        	  });
+/*
+			        	  $('<ul/>', {
+			        	    'class': 'my-new-list',
+			        	    html: items.join('')
+			        	  }).appendTo('body');
+	*/
+			        $('#divResult').val(items.join(''));
+			        
+			        
 		        }else{
-		        	$('#domain').removeClass('loading');
 		        	alert('Please check your input again!');
+		        	$('#domain').removeClass('loading');
 		        }
 		      }
 		  );

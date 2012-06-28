@@ -1,4 +1,7 @@
 @CHARSET "UTF-8";
+body{
+	font-family:"Tahoma",Times New Roman,Georgia,Serif;
+}
 .loading{
   background-image:url('../img/indicator.gif');
   background-position:right;

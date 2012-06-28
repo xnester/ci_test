@@ -67,5 +67,8 @@ echo form_submit('submit','Save');
 echo form_close();
 
 echo 'Last Edit: '.$row->stamp;
+echo '<br>';
+echo form_textarea(array('id'=>'divResult','name'=>'divResult','cols'=>'100','rows'=>'13','readonly'=>'true'));
+
 
 ?>

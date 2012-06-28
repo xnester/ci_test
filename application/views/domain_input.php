@@ -62,4 +62,8 @@ echo form_input($ndata);
 */
 echo form_submit('submit','Add');
 echo form_close();
+echo '<br>';
+echo form_textarea(array('id'=>'divResult','name'=>'divResult','cols'=>'100','rows'=>'13','readonly'=>'true'));
+
+
 ?>

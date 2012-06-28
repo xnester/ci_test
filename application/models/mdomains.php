@@ -19,6 +19,7 @@ class MDomains extends CI_Model
 	{
 		$now=date("Y-m-d H:i:s");
 		$data['stamp']=$now;
+		$data['name']=strtolower($data['name']);
 		// Insert to database
 		$this->db->insert('domains',$data);
 		
@@ -37,6 +38,7 @@ class MDomains extends CI_Model
 	{
 		$now=date("Y-m-d H:i:s");
 		$data['stamp']=$now;
+		$data['name']=strtolower($data['name']);
 		$this->db->where('id', $id);
 		$this->db->update('domains', $data); 
 	}
