@@ -1,16 +1,16 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : 10.0.1.53
-Source Server Version : 50152
-Source Host           : 10.0.1.53:3306
+Source Server         : localhost
+Source Server Version : 50137
+Source Host           : localhost:3306
 Source Database       : ci_test
 
 Target Server Type    : MYSQL
-Target Server Version : 50152
+Target Server Version : 50137
 File Encoding         : 65001
 
-Date: 2012-06-25 18:28:36
+Date: 2012-06-30 18:48:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -39,7 +39,7 @@ CREATE TABLE `clients` (
 INSERT INTO `clients` VALUES ('000122', '123450', 'test12345', 'test@test.com', '4019', '0', 'Active', '2012-06-14 14:45:01', '2012-06-14 17:17:19');
 INSERT INTO `clients` VALUES ('000123', '654321', 'Spam', 'spam@spam.com', '4321', '0', 'Active', '2012-06-14 16:06:03', '2012-06-14 17:17:22');
 INSERT INTO `clients` VALUES ('000124', '020018', 'Jasmine Internet', 'domain@ji-net.com', '40190', '0', 'Active', '2012-06-14 17:08:36', '2012-06-15 09:27:31');
-INSERT INTO `clients` VALUES ('000125', '033330', '3333', '3333', '33334', '0', 'Active', '2012-06-14 17:18:19', '2012-06-14 17:45:41');
+INSERT INTO `clients` VALUES ('000125', '033330', '3333', '3333', '33334', '4', 'Active', '2012-06-14 17:18:19', '2012-06-30 18:48:43');
 
 -- ----------------------------
 -- Table structure for `contacts`
@@ -81,12 +81,13 @@ CREATE TABLE `dealers` (
   `created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of dealers
 -- ----------------------------
-INSERT INTO `dealers` VALUES ('000004', '12', '12', '12', '', '2012-06-15 11:47:55', '2012-06-15 11:48:01');
+INSERT INTO `dealers` VALUES ('000004', 'test1', '12', '12', '', '2012-06-15 11:47:55', '2012-06-30 18:25:43');
+INSERT INTO `dealers` VALUES ('000005', 'test2', '1234', 'test@test.com', '', '2012-06-30 17:49:40', '2012-06-30 17:49:40');
 
 -- ----------------------------
 -- Table structure for `domains`
@@ -114,7 +115,7 @@ CREATE TABLE `domains` (
 -- ----------------------------
 INSERT INTO `domains` VALUES ('000001', 'ji-net.com', 'NETWORK SOLUTIONS, LLC.', '1999-10-08', '2014-10-08', '2011-09-14', 'ns.ji-net.com,ns2.ji-net.com,', 'Active', '0000', '0000-00-00 00:00:00', '2012-05-02 16:20:03', '');
 INSERT INTO `domains` VALUES ('000002', 'google.com', 'MARKMONITOR INC.', '1997-09-15', '2020-09-13', '2012-01-29', 'ns1.google.com,ns2.google.com,ns3.google.com,ns4.google.com,', 'Active', '0000', '0000-00-00 00:00:00', '2012-05-04 15:34:27', '');
-INSERT INTO `domains` VALUES ('000003', 'ji-net.co.th', 'T.H.NIC Co., Ltd.', '0000-00-00', '0000-00-00', '0000-00-00', 'ns.ji-net.co.th,ns2.ji-net.co.th,', 'Active', '0000', '0000-00-00 00:00:00', '2012-05-22 14:00:38', '');
+INSERT INTO `domains` VALUES ('000003', 'ji-net.co.th', 'T.H.NIC Co., Ltd.', '2000-12-15', '2013-12-14', '2011-12-07', 'ns.ji-net.co.th\r\nns2.ji-net.co.th\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-30 17:02:59', '');
 
 -- ----------------------------
 -- Table structure for `hosts`
@@ -158,3 +159,25 @@ CREATE TABLE `ips` (
 INSERT INTO `ips` VALUES ('000001', '192.168.1.1', 'bond0.300', '1', '');
 INSERT INTO `ips` VALUES ('000002', '192.168.1.2', '', '1', '');
 INSERT INTO `ips` VALUES ('000003', '192.168.1.3', '', '2', '');
+
+-- ----------------------------
+-- Table structure for `products`
+-- ----------------------------
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE `products` (
+  `id` int(6) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `price` varchar(50) NOT NULL,
+  `stamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+  `desc` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of products
+-- ----------------------------
+INSERT INTO `products` VALUES ('000001', 'Web Hosting', '12', '2012-06-30 17:07:05', '44');
+INSERT INTO `products` VALUES ('000002', 'Mail Hosting', '20', '2012-06-30 17:07:16', '123456789');
+INSERT INTO `products` VALUES ('000003', 'Domain EasyNIC', '', '2012-06-30 17:15:50', 'EasyNIC');
+INSERT INTO `products` VALUES ('000004', 'Domain NSL', '', '2012-06-30 17:16:09', 'Network Solution\r\n');
+INSERT INTO `products` VALUES ('000005', 'Domain THNIC', '630', '2012-06-30 17:16:19', 'THNIC');
