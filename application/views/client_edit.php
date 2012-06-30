@@ -21,15 +21,8 @@
 	}
 	
 	echo '<p>';
-	echo form_label('Seller','seller');
-	//From DB
-	$options = array(
-                  'small'  => 'Small Shirt',
-                  'med'    => 'Medium Shirt',
-                  'large'   => 'Large Shirt',
-                  'xlarge' => 'Extra Large Shirt',
-                );
-	echo form_dropdown('seller', $options, 'large');
+	echo form_label('Salesperson','dealer_id');
+	echo form_dropdown('dealer_id', $options, $row->dealer_id);
 	echo '</p>';
 	
 	echo form_submit('submit','Update');

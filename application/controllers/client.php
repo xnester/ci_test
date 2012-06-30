@@ -12,11 +12,11 @@ class Client extends CI_Controller
 	}
 	function edit($id)
 	{
+		$data['options']=$this->__salesperson();
 		$data['row']=$this->MClients->get_client($id);
 		$data['title']='Edit Client Profile';
 		$data['headline']='Edit Client Profile';
-		$data['include']='client_edit';
-			
+		$data['include']='client_edit';		
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -27,23 +27,32 @@ class Client extends CI_Controller
 			'cus_id'=>$this->security->xss_clean($this->input->post('cus_id')),
 			'name'=>$this->security->xss_clean($this->input->post('name')),
 			'email'=>$this->security->xss_clean($this->input->post('email')),
-			'phone'=>$this->security->xss_clean($this->input->post('phone'))
+			'phone'=>$this->security->xss_clean($this->input->post('phone')),
+			'dealer_id'=>$this->security->xss_clean($this->input->post('dealer_id'))
 		);
-	if($data['cus_id'])
+		if($data['cus_id'])
 		{
 			$this->MClients->client_update($id,$data);
 			redirect('client/','refresh');
 		}else{
 			redirect('client/edit','refresh');
 		}
-		
+	}
+	function __salesperson()
+	{
+		$query=$this->MClients->get_all_salesperson();	
+		$options=array();
+		foreach ($query->result() as $salesperson) {
+			$options[$salesperson->id]=$salesperson->name;
+		}
+		return $options;
 	}
 	function add()
 	{
+		$data['options']=$this->__salesperson();
 		$data['title']='Add New Client';
 		$data['headline']='Welcome!';
-		$data['include']='client_input';
-			
+		$data['include']='client_input';	
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -53,11 +62,11 @@ class Client extends CI_Controller
 			'cus_id'=>$this->security->xss_clean($this->input->post('cus_id')),
 			'name'=>$this->security->xss_clean($this->input->post('name')),
 			'email'=>$this->security->xss_clean($this->input->post('email')),
-			'phone'=>$this->security->xss_clean($this->input->post('phone'))
+			'phone'=>$this->security->xss_clean($this->input->post('phone')),
+			'dealer_id'=>$this->security->xss_clean($this->input->post('dealer_id'))
 		);
 		if(!$this->MClients->client_exists($data['cus_id']))
 		{
-			//echo 'Doesn\'t Exists!';
 			if($data['cus_id'])
 			{
 				$this->MClients->client_add($data);
@@ -75,7 +84,6 @@ class Client extends CI_Controller
 	{
 		$this->load->library('table');
 		$query=$this->MClients->listall();
-		
 		// generate HTML table from query results
 		$tmpl = array (
 			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
@@ -83,24 +91,18 @@ class Client extends CI_Controller
 			'row_start' => '<tr class="odd_row">' 
 		);
 		$this->table->set_template($tmpl); 
-		
 		$this->table->set_empty("&nbsp;"); 
-		
 		$this->table->set_heading('No.','Cus ID', 'Client Name', 'Seller', 'Phone', 'Email','Action');
-		
 		$table_row = array();
 		$i=1;
-		foreach ($query->result() as $clients) {
-
+		foreach ($query->result() as $clients)
+		{
+			$salesperson=$this->MClients->get_salesperson($clients->dealer_id);
 			$table_row = NULL;
 			$table_row[] = $i;
 			$table_row[] = htmlspecialchars($clients->cus_id);
 			$table_row[] = htmlspecialchars($clients->name);
-			$table_row[] = 'seller';
-			//$table_row[] = htmlspecialchars($student->email);
-			//$table_row[] = htmlspecialchars($student->phone);
-			//$table_row[] = $student->state;
-			//$table_row[] = $student->zip;
+			$table_row[] = $clients->dealer_id;
 			$table_row[] = $clients->phone;
 			$table_row[] = mailto($clients->email);
 			$table_row[] = '<span style="white-space: nowrap">' . 
@@ -113,15 +115,11 @@ class Client extends CI_Controller
 			
 			$i++;
 		}    
-		
 		$students_table = $this->table->generate();
-		
+		$data['data_table'] = $students_table;
 		$data['title']='Clients';
 		$data['headline']='Clients';
-		$data['include']='vclient';
-
-		$data['data_table'] = $students_table;
-		
+		$data['include']='vclient';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}

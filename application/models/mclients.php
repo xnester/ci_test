@@ -4,6 +4,22 @@ class MClients extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
+		$this->load->model('MDealers');
+	}
+	function get_all_salesperson()
+	{
+		$query=$this->MDealers->listall();
+		return $query;
+	}
+	function get_salesperson($id)
+	{
+		return $row=$this->MDealers->get_dealer($id);
+		/*if($row>0)
+		{
+			return $row;
+		}else{
+			return 'No Salesperson Select';
+		}*/
 	}
 	function client_exists($cus_id)
 	{

@@ -9,7 +9,7 @@
 <body>
 <div id="nav">
 <a href="<?php echo base_url();?>domain">Domains</a> | <a href="<?php echo base_url();?>client">Clients</a> | <a href="<?php echo base_url();?>dealer">SalesPerson</a>
-| <a href="<?php echo base_url();?>host">Hosts</a>
+| <a href="<?php echo base_url();?>host">Hosts</a> | <a href="<?php echo base_url();?>product">Products</a>
 
 </div>
 <h1><?php echo $headline;?></h1>
