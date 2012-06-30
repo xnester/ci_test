@@ -26,14 +26,21 @@ class Domain extends CI_Controller {
 		
 		$this->pagination->initialize($config); 
 	}
+	function __getclient()
+	{
+		$query=$this->MDomains->get_all_client();
+		$options=array();
+		foreach ($query->result() as $client) {
+			$options[$client->id]=$client->cus_id.' - '.$client->name;
+		}
+		return $options;
+	}
 	function addnew()
 	{
-		// Load View edit form
-		
+		$data['options']=$this->__getclient();
 		$data['title']='Add New Domain';
 		$data['headline']='Welcome!';
-		$data['include']='domain_input';
-		
+		$data['include']='domain_input';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -45,9 +52,11 @@ class Domain extends CI_Controller {
 			'expires'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('expires')))),
 			'changed'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('changed')))),
 			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
-			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
+			'nserver'=>$this->security->xss_clean($this->input->post('nserver')),
+			'client_id'=>$this->security->xss_clean($this->input->post('client_id')),
+			//note
+			'note'=>$this->security->xss_clean($this->input->post('divResult'))
 		);
-		
 		if(!$this->MDomains->checkExists($data['name']))
 		{
 			//echo 'Doesn\'t Exists!';
@@ -68,12 +77,11 @@ class Domain extends CI_Controller {
 	function edit($id)
 	{
 		$data['row']=$this->MDomains->getdomain($id);
-		
+		$data['options']=$this->__getclient();		
 		// Load View edit form
 		$data['title']='Edit Domain: ';
 		$data['headline']='Welcome!';
-		$data['include']='domain_edit';
-		
+		$data['include']='domain_edit';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -86,7 +94,11 @@ class Domain extends CI_Controller {
 			'expires'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('expires')))),
 			'changed'=>date('Y-m-d',strtotime($this->security->xss_clean($this->input->post('changed')))),
 			'registrar'=>$this->security->xss_clean($this->input->post('registrar')),
-			'nserver'=>$this->security->xss_clean($this->input->post('nserver'))
+			'nserver'=>$this->security->xss_clean($this->input->post('nserver')),
+			'client_id'=>$this->security->xss_clean($this->input->post('client_id')),
+			//note
+			'note'=>$this->security->xss_clean($this->input->post('divResult'))
+				
 		);
 		
 		if($data['name'])
@@ -117,17 +129,14 @@ class Domain extends CI_Controller {
 			'heading_row_start' => '<tr class="table_header">',
 			'row_start' => '<tr class="odd_row">' 
 		);
-		$this->table->set_template($tmpl); 
-		
-		$this->table->set_empty("&nbsp;"); 
-		
-		$this->table->set_heading('No.','Name', 'Registrar', 'Created', 'Expires', 'Changed','NS',
-   'Client','Action');
-		
+		$this->table->set_template($tmpl);
+		$this->table->set_empty("&nbsp;");
+		$this->table->set_heading('No.','Name', 'Registrar', 'Created', 'Expires', 'Changed','NS','Client','Action');
 		$table_row = array();
 		$i=1+$offset;
-		foreach ($query->result() as $domains) {
-
+		foreach ($query->result() as $domains)
+		{
+			$client=$this->MDomains->get_client($domains->client_id);
 			$table_row = NULL;
 			$table_row[] = $i;
 			$table_row[] = htmlspecialchars($domains->name);
@@ -136,8 +145,12 @@ class Domain extends CI_Controller {
 			$table_row[] = htmlspecialchars($domains->expires);
 			$table_row[] = htmlspecialchars($domains->changed);
 			$table_row[] = $domains->nserver;
-			$table_row[] = $domains->client_id;
-			//$table_row[] = mailto($domains->email);
+			if($client)
+			{
+				$table_row[] = $client->name;
+			}else{
+				$table_row[] = $domains->client_id;;
+			}
 			$table_row[] = '<span style="white-space: nowrap">' . 
 			anchor('domain/edit/' . $domains->id, 'edit') . ' | ' .
 			anchor('domain/delete/' . $domains->id, 'delete',
@@ -147,15 +160,12 @@ class Domain extends CI_Controller {
 			$this->table->add_row($table_row);
 			
 			$i++;
-		}    
-		
+		}
 		$students_table = $this->table->generate();
-		
 		$data['data_table'] = $students_table;
 		$data['title']='Add New Domain';
 		$data['headline']='Welcome!';
-		$data['include']='vdomain';
-			
+		$data['include']='vdomain';//view page	
 		$this->load->vars($data);
 		$this->load->view('template');
 	}

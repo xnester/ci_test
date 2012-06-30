@@ -13,13 +13,13 @@ class MClients extends CI_Model
 	}
 	function get_salesperson($id)
 	{
-		return $row=$this->MDealers->get_dealer($id);
-		/*if($row>0)
+		$row=$this->MDealers->get_dealer($id);
+		if($row)
 		{
 			return $row;
 		}else{
-			return 'No Salesperson Select';
-		}*/
+			return false;
+		}
 	}
 	function client_exists($cus_id)
 	{

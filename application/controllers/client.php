@@ -16,7 +16,7 @@ class Client extends CI_Controller
 		$data['row']=$this->MClients->get_client($id);
 		$data['title']='Edit Client Profile';
 		$data['headline']='Edit Client Profile';
-		$data['include']='client_edit';		
+		$data['include']='client_edit';//view page	
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -51,8 +51,8 @@ class Client extends CI_Controller
 	{
 		$data['options']=$this->__salesperson();
 		$data['title']='Add New Client';
-		$data['headline']='Welcome!';
-		$data['include']='client_input';	
+		$data['headline']='Add New Client';
+		$data['include']='client_input';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -73,7 +73,8 @@ class Client extends CI_Controller
 				redirect('client/','refresh');
 			}else{
 				echo 'Please insert data.';
-				redirect('client/add','refresh');
+				echo anchor('client/add','Back');
+				//redirect('client/add','refresh');
 			}
 		}else{
 			echo anchor('client/add','Back');
@@ -92,7 +93,7 @@ class Client extends CI_Controller
 		);
 		$this->table->set_template($tmpl); 
 		$this->table->set_empty("&nbsp;"); 
-		$this->table->set_heading('No.','Cus ID', 'Client Name', 'Seller', 'Phone', 'Email','Action');
+		$this->table->set_heading('No.','Cus ID', 'Client Name', 'SalesPerson', 'Phone', 'Email','Action');
 		$table_row = array();
 		$i=1;
 		foreach ($query->result() as $clients)
@@ -102,7 +103,12 @@ class Client extends CI_Controller
 			$table_row[] = $i;
 			$table_row[] = htmlspecialchars($clients->cus_id);
 			$table_row[] = htmlspecialchars($clients->name);
-			$table_row[] = $clients->dealer_id;
+			if($salesperson)
+			{
+				$table_row[] = $salesperson->name;
+			}else{
+				$table_row[] = 'SalesPerson';
+			}
 			$table_row[] = $clients->phone;
 			$table_row[] = mailto($clients->email);
 			$table_row[] = '<span style="white-space: nowrap">' . 
@@ -112,7 +118,6 @@ class Client extends CI_Controller
 				+ 'delete the record for ".addslashes($clients->name)."?')\"") .
 				'</span>';
 			$this->table->add_row($table_row);
-			
 			$i++;
 		}    
 		$students_table = $this->table->generate();

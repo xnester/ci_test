@@ -1,6 +1,4 @@
-<h3>Add New Domain</h3>
-<?php 
-	
+<?php
 	$attributes = array('id' => 'form_client');
 	echo form_open('client/save',$attributes);
 	// an array of the fields in the student table

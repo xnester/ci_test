@@ -4,7 +4,22 @@ class MDomains extends CI_Model
 	function __construct()
 	{
 		parent::__construct();
-		
+		$this->load->model('MClients');
+	}
+	function get_all_client()
+	{
+		$query=$this->MClients->listall();
+		return $query;
+	}
+	function get_client($id)
+	{
+		$row=$this->MClients->get_client($id);
+		if($row)
+		{
+			return $row;
+		}else{
+			return false;
+		}
 	}
 	function getallDomain($limit,$offset)
 	{
