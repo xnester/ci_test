@@ -14,9 +14,9 @@ class Host extends CI_Controller
 	function list_all()
 	{
 		//list_all
+		
 		$query=$this->MHosts->getall();
 		$this->load->library('table');
-		
 		// generate HTML table from query results
 		$tmpl = array (
 			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
@@ -24,23 +24,21 @@ class Host extends CI_Controller
 			'row_start' => '<tr class="odd_row">' 
 		);
 		$this->table->set_template($tmpl); 
-		
 		$this->table->set_empty("&nbsp;"); 
-		
 		$this->table->set_heading('No.','Name','Status','IP','Space', 'Free','Action');
-		
 		$table_row = array();
 		$i=1;
-		foreach ($query->result() as $hosts) {
-			
+		foreach ($query->result() as $hosts)
+		{
 			$table_row = NULL;
 			$table_row[] = $i;
-			$table_row[] = htmlspecialchars($hosts->name);
+			//$table_row[] = htmlspecialchars($hosts->name);
+			$table_row[] = anchor('host/detail/'.$hosts->name, $hosts->name);
 			$table_row[] = $hosts->status;
 			//show ip
-			$ips=$this->MHosts->getip($hosts->id);
-			if($ips){
-				$table_row[] = $ips->ip;
+			$ip_exists=$this->MHosts->host_ip_exists($hosts->id);
+			if($ip_exists){
+				$table_row[] = $ip_exists->ip;
 			}else{
 				$table_row[] = 'No Assign IP';
 			}
@@ -55,14 +53,12 @@ class Host extends CI_Controller
 			$this->table->add_row($table_row);
 			$i++;
 		}    
-		
 		$hosts_table = $this->table->generate();
-		$data['data_table'] = $hosts_table;
-		
+		$data['data_table'] = anchor('host/add','Add new Host');
+		$data['data_table'] .= $hosts_table;
 		$data['title']='Hosts';
 		$data['headline']='Hosts';
-		$data['include']='vhost';
-		
+		$data['include']='vhost';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -70,8 +66,7 @@ class Host extends CI_Controller
 	{
 		$data['title']='Hosts';
 		$data['headline']='Hosts';
-		$data['include']='host_input';
-		
+		$data['include']='host_input';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}
@@ -82,12 +77,22 @@ class Host extends CI_Controller
 			'space'=>$this->security->xss_clean($this->input->post('space')),
 			'status'=>$this->security->xss_clean($this->input->post('status'))
 		);
+		$ips=$this->security->xss_clean($this->input->post('ips'));
 		if(!$this->MHosts->check_exists($data['name']))
 		{
 			//echo 'Doesn\'t Exists!';
 			if($data['name'])
 			{
 				$this->MHosts->addhost($data);
+				$data_ip['host_id']=$this->MHosts->get_last_id('hosts');
+				foreach($ips as $ip)
+				{
+					if(strlen($ip)>0)
+					{
+						$data_ip['ip']=$ip;
+						$this->MHosts->addip($data_ip);
+					}
+				}
 				redirect('host/','refresh');
 			}else{
 				echo 'Please insert data.';
@@ -105,6 +110,108 @@ class Host extends CI_Controller
 		$data['headline']='Hosts';
 		$data['include']='host_edit';
 		
+		$this->load->vars($data);
+		$this->load->view('template');
+	}
+	function ip($mode='',$host_id='',$id='')
+	{
+		if($mode=='add' && $host_id !='')
+		{
+			echo 'Add';
+		}
+		else if($mode=='edit' && $host_id !='' && $id != '')
+		{
+			echo 'Edit';
+
+		}
+		else if($mode=='del' && $host_id !='' && $id != '' )
+		{
+			echo 'Delete';
+		}
+		else
+		{
+			echo 'Nothing to do!';
+			//redirect('host/','refresh');
+		}
+	}
+	function detail($name)
+	{
+		$hosts=$this->MHosts->get_host_detail($name);
+		$this->load->library('table');
+		// generate HTML table from query results
+		$tmpl = array (
+			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+			'heading_row_start' => '<tr class="table_header">',
+			'row_start' => '<tr class="odd_row">' 
+		);
+		$this->table->set_template($tmpl); 
+		//Host Detail
+		$this->table->set_empty("&nbsp;"); 
+		$this->table->set_heading('Name','Status','Space', 'Free','Last');
+		$table_row = array();
+		$table_row = NULL;
+		$table_row[] = $hosts->name;
+		$table_row[] = $hosts->status;
+		$table_row[] = $hosts->space;
+		$table_row[] = $hosts->free;
+		$table_row[] = $hosts->stamp;
+		$this->table->add_row($table_row);
+		$hosts_table = $this->table->generate();
+		
+		//IP detail
+		$tmpl_ip = array (
+				'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+				'heading_row_start' => '<tr class="table_header">',
+				'row_start' => '<tr class="odd_row">'
+		);
+		$this->table->set_template($tmpl_ip);
+		$this->table->set_empty("&nbsp;");
+		$this->table->set_heading('IP','Vlan','Description','Actions');
+		$ip_row = array();
+		
+		$ip_exists=$this->MHosts->host_ip_exists($hosts->id);
+		if($ip_exists){
+			$query=$this->MHosts->get_all_host_ip($hosts->id);
+			foreach ($query->result() as $ips)
+			{
+				$ip_row = NULL;
+				$ip_row[] = $ips->ip;
+				$ip_row[] = $ips->int;
+				$ip_row[] = $ips->desc;
+				$ip_row[] = '<span style="white-space: nowrap">' .
+						anchor('host/ip/edit/'.$hosts->id.'/'. $ips->id, 'edit') . ' | ' .
+						anchor('host/ip/del/'.$hosts->id.'/'. $ips->id, 'delete',
+								"onclick=\" return confirm('Are you sure you want to '
+				+ 'delete the record for ".addslashes($ips->ip)."?')\"") .
+								'</span>';
+				$this->table->add_row($ip_row);
+			}
+		}else{
+			$ip_row[] = 'No Assign IP';
+			$ip_row[] = '';
+			$ip_row[] = '';
+			$ip_row[] = '';//anchor('host/ip/add/'.$hosts->id, 'Add');
+			$this->table->add_row($ip_row);
+		}
+
+		$ip_row = NULL;
+		$ip_row[] = form_input(array('id' => 'ips'.$hosts->id,'name' => 'ips'.$hosts->id));
+		$ip_row[] = form_input(array('id' => 'vlan'.$hosts->id,'name' => 'vlan'.$hosts->id));
+		$ip_row[] = form_input(array('id' => 'desc'.$hosts->id,'name' => 'desc'.$hosts->id));
+		//$ip_row[] = anchor('host/ip/add/'.$hosts->id, 'Add');
+
+		$ip_row[] = form_button(array('id' => $hosts->id,'name' => 'add_ip','class'=>'add_ip'),'Add IP');
+		$this->table->add_row($ip_row);
+		
+		echo form_close();
+		
+		$hosts_table .='<p>IP</p>';
+		$hosts_table .= $this->table->generate();
+		$data['data_table'] = $hosts_table;
+		$data['data_table'] .= '<p>'.anchor('host/','Back').'</p>';
+		$data['title']='Hosts';
+		$data['headline']='Hosts';
+		$data['include']='vhost';//view page
 		$this->load->vars($data);
 		$this->load->view('template');
 	}

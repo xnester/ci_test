@@ -14,10 +14,25 @@ class MHosts extends CI_Model
 		$query=$this->db->get();
 		return $query;
 	}
-	function getip($host)
+	function get_host_detail($name)
+	{
+		$this->db->from('hosts');
+		$this->db->where('name', $name);
+		$query=$this->db->get();
+		$row = $query->row();
+		return $row;
+	}
+	function get_all_host_ip($hosts_id)
 	{
 		$this->db->from('ips');
-		$this->db->where('host_id', $host); 
+		$this->db->where('host_id', $hosts_id);
+		$query=$this->db->get();
+		return $query;
+	}
+	function host_ip_exists($hosts_id)
+	{
+		$this->db->from('ips');
+		$this->db->where('host_id', $hosts_id); 
 		$query=$this->db->get();
 		$row = $query->row();
 		if($query->num_rows() > 0)
@@ -26,7 +41,6 @@ class MHosts extends CI_Model
 		}else{
 			return 0;
 		}
-		
 	}
 	function gethost($id)
 	{
@@ -49,6 +63,17 @@ class MHosts extends CI_Model
 		$now=date("Y-m-d H:i:s");
 		$data['stamp']=$now;
 		$this->db->insert('hosts',$data);
+	}
+	function get_last_id($table)
+	{
+		$this->db->select_max('id');
+		$query=$this->db->get($table);
+		$result=$query->row();
+		return $result->id;
+	}
+	function addip($data)
+	{
+		$this->db->insert('ips',$data);
 	}
 	function updatehost($id,$data)
 	{

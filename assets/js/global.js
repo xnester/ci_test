@@ -36,7 +36,8 @@ $(document).ready(function() {
     
     );
     }
-  });  
+  });
+  //Clear Form data when input change
   $('#form_add').find('#name').change(function() {
 	  $('#created').val('');
 	  $('#changed').val('');
@@ -45,8 +46,47 @@ $(document).ready(function() {
 	  $('#nserver').val('');
 	  $('#divResult').val('');
   });
-  
-  // Whois
+  //relCopy for add more ip to host
+  $(function(){
+	  var removeLink = ' <a class="remove" href="#" onclick="$(this).parent().remove(); return false">remove</a>';
+
+	  $('a.add').relCopy({limit: 5, append: removeLink});
+  });
+  //Add ip
+  $('.add_ip').click(function(){
+	  var element = $(this);
+	  var host_id = element.attr("id");
+	  var ip = $('#ips'+host_id).val();
+	  var vlan = $('#vlan'+host_id).val();
+	  var desc = $('#desc'+host_id).val();
+	  
+	  var dataString = 'ip='+ ip + '&host_id=' + host_id + '&int=' + vlan + '&desc=' + desc;
+	  
+	  if(ip =='' && vlan =='')
+	  {
+		  alert("Please Enter Some Text");
+	  }
+	  else
+	  {
+		  alert(dataString);
+		  /*
+	  $("#flash"+Id).show();
+	  $("#flash"+Id).fadeIn(400).html('<img src="ajax-loader.gif" align="absmiddle"> loading.....');
+	  $.ajax({
+	  type: "POST",
+	  url: "insertajax.php",
+	  data: dataString,
+	  cache: false,
+	  success: function(html){
+	  $("#loadplace"+Id).append(html);
+	  $("#flash"+Id).hide();
+	  }
+	  });*/
+	  }
+	  //return false;
+	  });
+
+  //Whois
   $('#bwhois').click(function(){ 
 	  
 	  var domain = $('#name').val();

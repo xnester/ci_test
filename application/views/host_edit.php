@@ -1,5 +1,5 @@
 <?php 
-	echo anchor('host','back');
+	
 	
 	$attributes = array('id' => 'form_host_edit');
 	echo form_open('host/update',$attributes);
@@ -31,8 +31,13 @@
                 );
 	echo form_dropdown('status', $options,$row->status);
 	echo '</p>';
-	
-	echo form_submit('submit','Update');
-	echo form_close();
+	echo '<p>';
 	echo 'Last Update: '.$row->stamp;
+	echo '</p>';
+	echo '<p>';
+	echo form_submit('submit','Update');
+	echo anchor('host','back');
+	echo '</p>';
+	echo form_close();
+	
 ?>
