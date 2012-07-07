@@ -31,6 +31,7 @@ class Domain extends CI_Controller {
 		$query=$this->MDomains->get_all_client();
 		$options=array();
 		foreach ($query->result() as $client) {
+			$options[0]='';
 			$options[$client->id]=$client->cus_id.' - '.$client->name;
 		}
 		return $options;

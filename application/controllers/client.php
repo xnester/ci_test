@@ -43,6 +43,7 @@ class Client extends CI_Controller
 		$query=$this->MClients->get_all_salesperson();	
 		$options=array();
 		foreach ($query->result() as $salesperson) {
+			$options[0]='';
 			$options[$salesperson->id]=$salesperson->name;
 		}
 		return $options;

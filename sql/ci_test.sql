@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50137
 File Encoding         : 65001
 
-Date: 2012-06-30 18:48:28
+Date: 2012-07-01 23:20:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -38,8 +38,8 @@ CREATE TABLE `clients` (
 -- ----------------------------
 INSERT INTO `clients` VALUES ('000122', '123450', 'test12345', 'test@test.com', '4019', '0', 'Active', '2012-06-14 14:45:01', '2012-06-14 17:17:19');
 INSERT INTO `clients` VALUES ('000123', '654321', 'Spam', 'spam@spam.com', '4321', '0', 'Active', '2012-06-14 16:06:03', '2012-06-14 17:17:22');
-INSERT INTO `clients` VALUES ('000124', '020018', 'Jasmine Internet', 'domain@ji-net.com', '40190', '0', 'Active', '2012-06-14 17:08:36', '2012-06-15 09:27:31');
-INSERT INTO `clients` VALUES ('000125', '033330', '3333', '3333', '33334', '4', 'Active', '2012-06-14 17:18:19', '2012-06-30 18:48:43');
+INSERT INTO `clients` VALUES ('000124', '020018', 'Jasmine Internet', 'domain@ji-net.com', '40190', '4', 'Active', '2012-06-14 17:08:36', '2012-07-01 18:01:18');
+INSERT INTO `clients` VALUES ('000125', '033330', '3333', '3333', '33334', '5', 'Active', '2012-06-14 17:18:19', '2012-07-01 18:01:15');
 
 -- ----------------------------
 -- Table structure for `contacts`
@@ -86,8 +86,8 @@ CREATE TABLE `dealers` (
 -- ----------------------------
 -- Records of dealers
 -- ----------------------------
-INSERT INTO `dealers` VALUES ('000004', 'test1', '12', '12', '', '2012-06-15 11:47:55', '2012-06-30 18:25:43');
-INSERT INTO `dealers` VALUES ('000005', 'test2', '1234', 'test@test.com', '', '2012-06-30 17:49:40', '2012-06-30 17:49:40');
+INSERT INTO `dealers` VALUES ('000004', 'Sales#1', '12', 'test@test.com', '', '2012-06-15 11:47:55', '2012-07-01 18:00:50');
+INSERT INTO `dealers` VALUES ('000005', 'Sales#2', '0', '123', '', '2012-07-01 18:01:09', '2012-07-01 18:01:09');
 
 -- ----------------------------
 -- Table structure for `domains`
@@ -108,14 +108,24 @@ CREATE TABLE `domains` (
   `note` longtext NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `domain_name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of domains
 -- ----------------------------
-INSERT INTO `domains` VALUES ('000001', 'ji-net.com', 'NETWORK SOLUTIONS, LLC.', '1999-10-08', '2014-10-08', '2011-09-14', 'ns.ji-net.com,ns2.ji-net.com,', 'Active', '0000', '0000-00-00 00:00:00', '2012-05-02 16:20:03', '');
-INSERT INTO `domains` VALUES ('000002', 'google.com', 'MARKMONITOR INC.', '1997-09-15', '2020-09-13', '2012-01-29', 'ns1.google.com,ns2.google.com,ns3.google.com,ns4.google.com,', 'Active', '0000', '0000-00-00 00:00:00', '2012-05-04 15:34:27', '');
-INSERT INTO `domains` VALUES ('000003', 'ji-net.co.th', 'T.H.NIC Co., Ltd.', '2000-12-15', '2013-12-14', '2011-12-07', 'ns.ji-net.co.th\r\nns2.ji-net.co.th\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-30 17:02:59', '');
+INSERT INTO `domains` VALUES ('000001', 'ji-net.com', 'NETWORK SOLUTIONS, LLC.', '1999-10-08', '2014-10-08', '2011-09-14', 'ns.ji-net.com\r\nns2.ji-net.com', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:22:15', '');
+INSERT INTO `domains` VALUES ('000002', 'google.com', 'MARKMONITOR INC.', '1997-09-15', '2020-09-13', '2012-01-29', 'ns1.google.com\r\nns2.google.com\r\nns3.google.com\r\nns4.google.com\r\n', 'Active', '0125', '0000-00-00 00:00:00', '2012-07-02 00:20:09', '');
+INSERT INTO `domains` VALUES ('000003', 'ji-net.co.th', 'T.H.NIC Co., Ltd.', '2000-12-15', '2013-12-14', '2011-12-07', 'ns2.ji-net.co.th\r\nns.ji-net.co.th\r\n', 'Active', '0124', '0000-00-00 00:00:00', '2012-07-02 00:20:08', '');
+INSERT INTO `domains` VALUES ('000004', 'opdcacademy.com', 'REGISTER.COM, INC.', '2006-07-04', '2015-07-04', '2010-07-06', 'ns0.thai2learn.com\r\nns1.thai2learn.com', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:22:21', '');
+INSERT INTO `domains` VALUES ('000005', 'google.co.th', 'T.H.NIC Co., Ltd.', '2004-10-08', '2012-10-07', '2012-06-27', 'ns2.google.com\r\nns3.google.com\r\nns1.google.com\r\nns4.google.com\r\n', 'Active', '0123', '0000-00-00 00:00:00', '2012-07-02 00:20:05', '');
+INSERT INTO `domains` VALUES ('000006', 'doo-series.com', 'NAME.COM LLC', '2010-10-16', '2014-10-16', '2012-04-20', 'ns1.name.com\r\nns2.name.com\r\nns3.name.com\r\nns4.name.com\r\n', 'Active', '0123', '0000-00-00 00:00:00', '2012-07-02 00:20:04', '');
+INSERT INTO `domains` VALUES ('000007', 'swi.co.th', 'T.H.NIC Co., Ltd.', '2000-09-06', '2013-09-05', '2011-09-20', 'ns2.ji-net.com\r\nns.ji-net.com\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:13:49', '');
+INSERT INTO `domains` VALUES ('000008', 'fitel.co.th', 'T.H.NIC Co., Ltd.', '2001-10-12', '2013-10-11', '2012-02-27', 'master02.csloxinfo.com\r\nmaster01.csloxinfo.com\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:14:19', '');
+INSERT INTO `domains` VALUES ('000009', 'manager.co.th', 'T.H.NIC Co., Ltd.', '1999-01-17', '2013-04-16', '2011-03-30', 'ns.isp-thailand.com\r\nns2.isp-thailand.com\r\n', 'Active', '0122', '0000-00-00 00:00:00', '2012-07-02 00:19:51', '');
+INSERT INTO `domains` VALUES ('000010', 'thnic.co.th', 'T.H.NIC Co., Ltd.', '1999-03-30', '2030-04-01', '2011-09-20', 'ns-a.thnic.co.th\r\nns-b.thnic.co.th\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:24:12', '');
+INSERT INTO `domains` VALUES ('000011', 'cic.co.th', 'T.H.NIC Co., Ltd.', '2006-08-09', '2021-10-11', '2011-11-07', 'ns2.ji-net.com\r\nns.ji-net.com\r\n', 'Active', '0000', '0000-00-00 00:00:00', '2012-06-28 01:26:45', '');
+INSERT INTO `domains` VALUES ('000012', 'mthai.com', 'NETWORK SOLUTIONS, LLC.', '1998-06-13', '2015-06-12', '2010-08-10', 'dns2.proen.co.th\r\nns1.3bb.co.th\r\nns1.mthai.com\r\nns2.3bb.co.th\r\n', 'Active', '0000', '2012-06-29 00:06:30', '2012-06-29 00:06:30', '');
+INSERT INTO `domains` VALUES ('000013', 'about.us', 'NEUSTAR INC.', '2002-04-18', '2013-04-17', '2012-06-02', 'pdns1.ultradns.net\r\npdns2.ultradns.net\r\npdns3.ultradns.org\r\npdns4.ultradns.org\r\npdns5.ultradns.info\r\npdns6.ultradns.co.uk\r\n', 'Active', '0123', '0000-00-00 00:00:00', '2012-07-02 00:19:54', '');
 
 -- ----------------------------
 -- Table structure for `hosts`
@@ -135,10 +145,10 @@ CREATE TABLE `hosts` (
 -- ----------------------------
 -- Records of hosts
 -- ----------------------------
-INSERT INTO `hosts` VALUES ('000001', 'test', '200', '150', 'Remove', '', '2012-06-25 18:26:48');
+INSERT INTO `hosts` VALUES ('000001', 'test', '200', '150', 'Online', '', '2012-06-25 22:34:48');
 INSERT INTO `hosts` VALUES ('000002', 'test2', '500', '200', 'Online', '', '2012-06-25 18:26:58');
-INSERT INTO `hosts` VALUES ('000003', 'test3', '5000', '0', 'Down', 'sdf', '2012-06-25 16:22:02');
-INSERT INTO `hosts` VALUES ('000004', 'Spam', '5000', '0', 'Online', '', '2012-06-25 18:26:53');
+INSERT INTO `hosts` VALUES ('000003', 'test3', '500', '0', 'HW Error', 'sdf', '2012-06-25 22:39:53');
+INSERT INTO `hosts` VALUES ('000004', 'Spam', '500', '0', 'Online', 'Spam', '2012-06-25 23:08:58');
 
 -- ----------------------------
 -- Table structure for `ips`
@@ -161,6 +171,27 @@ INSERT INTO `ips` VALUES ('000002', '192.168.1.2', '', '1', '');
 INSERT INTO `ips` VALUES ('000003', '192.168.1.3', '', '2', '');
 
 -- ----------------------------
+-- Table structure for `periods`
+-- ----------------------------
+DROP TABLE IF EXISTS `periods`;
+CREATE TABLE `periods` (
+  `id` int(6) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `desc` text NOT NULL,
+  `start` date NOT NULL,
+  `stop` date NOT NULL,
+  `year` year(4) NOT NULL,
+  `services_id` int(6) NOT NULL,
+  `services_domains_id` int(6) NOT NULL,
+  `services_hosts_id` int(6) NOT NULL,
+  `services_products_id` int(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of periods
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `products`
 -- ----------------------------
 DROP TABLE IF EXISTS `products`;
@@ -181,3 +212,24 @@ INSERT INTO `products` VALUES ('000002', 'Mail Hosting', '20', '2012-06-30 17:07
 INSERT INTO `products` VALUES ('000003', 'Domain EasyNIC', '', '2012-06-30 17:15:50', 'EasyNIC');
 INSERT INTO `products` VALUES ('000004', 'Domain NSL', '', '2012-06-30 17:16:09', 'Network Solution\r\n');
 INSERT INTO `products` VALUES ('000005', 'Domain THNIC', '630', '2012-06-30 17:16:19', 'THNIC');
+
+-- ----------------------------
+-- Table structure for `services`
+-- ----------------------------
+DROP TABLE IF EXISTS `services`;
+CREATE TABLE `services` (
+  `id` int(10) unsigned zerofill NOT NULL AUTO_INCREMENT,
+  `unit` int(6) NOT NULL,
+  `size` int(6) NOT NULL,
+  `s_user` varchar(64) NOT NULL,
+  `s_pass` varchar(64) NOT NULL,
+  `domains_id` int(6) NOT NULL,
+  `hosts_id` int(6) NOT NULL,
+  `products_id` int(6) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `domains_id` (`domains_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of services
+-- ----------------------------
