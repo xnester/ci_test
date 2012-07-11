@@ -56,35 +56,36 @@ $(document).ready(function() {
   $('.add_ip').click(function(){
 	  var element = $(this);
 	  var host_id = element.attr("id");
-	  var ip = $('#ips'+host_id).val();
-	  var vlan = $('#vlan'+host_id).val();
-	  var desc = $('#desc'+host_id).val();
-	  
+	  var ip = $('#ips').val();
+	  var vlan = $('#vlan').val();
+	  var desc = $('#desc').val();
 	  var dataString = 'ip='+ ip + '&host_id=' + host_id + '&int=' + vlan + '&desc=' + desc;
-	  
-	  if(ip =='' && vlan =='')
+	  if(ip =='' || vlan =='')
 	  {
 		  alert("Please Enter Some Text");
 	  }
 	  else
-	  {
-		  alert(dataString);
-		  /*
-	  $("#flash"+Id).show();
-	  $("#flash"+Id).fadeIn(400).html('<img src="ajax-loader.gif" align="absmiddle"> loading.....');
-	  $.ajax({
-	  type: "POST",
-	  url: "insertajax.php",
-	  data: dataString,
-	  cache: false,
-	  success: function(html){
-	  $("#loadplace"+Id).append(html);
-	  $("#flash"+Id).hide();
-	  }
-	  });*/
+	  {	  
+		  $("#ip >tbody >tr.no_ip").hide();
+		  $('#ip >tbody:last').append('<tr class="flash"><td colspan="4">loading.....</td></tr>');	  
+		  $.ajax({
+			  type: "POST",
+			  url: "/ci_test/host/insert_ip",
+			  data: dataString,
+			  cache: false,
+			  success: function(html){
+				  $("#ip >tbody:last").append(html);
+				  $("#ip >tbody >tr.flash").hide();
+				  $('#ips').val('');
+				  $('#vlan').val('');
+				  $('#desc').val('');
+			  }
+		  });
+	  
+		  
 	  }
 	  //return false;
-	  });
+  });
 
   //Whois
   $('#bwhois').click(function(){ 
