@@ -159,95 +159,100 @@ class Host extends CI_Controller
 				</tr>';
 		}
 	}
-	function detail($name)
+	function detail($name='')
 	{
-		$hosts=$this->MHosts->get_host_detail($name);
-		$this->load->library('table');
-		// generate HTML table from query results
-		$tmpl = array (
-			'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
-			'heading_row_start' => '<tr class="table_header">',
-			'row_start' => '<tr class="odd_row">' 
-		);
-		$this->table->set_template($tmpl); 
-		//Host Detail
-		$this->table->set_empty("&nbsp;"); 
-		$this->table->set_heading('Id','Name','Status','Space', 'Free','Last');
-		$table_row = array();
-		$table_row = NULL;
-		$table_row[] = $hosts->id;
-		$table_row[] = $hosts->name;
-		$table_row[] = $hosts->status;
-		$table_row[] = $hosts->space;
-		$table_row[] = $hosts->free;
-		$table_row[] = $hosts->stamp;
-		$this->table->add_row($table_row);
-		$hosts_table = $this->table->generate();
-		
-		//IP detail
-		/*
-		$this->table->clear();
-		$tmpl_ip = array (
-				'table_open' => '<table id="ip" name="ip" border="1" cellpadding="4" cellspacing="2">',
-				'heading_row_start' => '<tr class="table_header">',
-				'row_start' => '<tr class="odd_row">'
-		);
-		$this->table->set_template($tmpl_ip);
-		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('IP','Vlan','Description','Actions');
-		$ip_row = array();
-		*/
-		$ip_exists=$this->MHosts->host_ip_exists($hosts->id);
-		if($ip_exists){
-			$query=$this->MHosts->get_all_host_ip($hosts->id);
-			$data['data_ip']=$query;
-			/*
-			foreach ($query->result() as $ips)
-			{
-				$ip_row = NULL;
-				$ip_row[] = $ips->ip;
-				$ip_row[] = $ips->int;
-				$ip_row[] = $ips->desc;
-				$ip_row[] = '<span style="white-space: nowrap">' .
-						anchor('host/ip/edit/'.$hosts->id.'/'. $ips->id, 'edit') . ' | ' .
-						anchor('host/ip/del/'.$hosts->id.'/'. $ips->id, 'delete',
-								"onclick=\" return confirm('Are you sure you want to '
-				+ 'delete the record for ".addslashes($ips->ip)."?')\"") .
-								'</span>';
-				$this->table->add_row($ip_row);
-			}
-			*/
+		if($name=='')
+		{
+			redirect('host/','refresh');
 		}else{
-			$data['data_ip']=0;
+			$hosts=$this->MHosts->get_host_detail($name);
+			$this->load->library('table');
+			// generate HTML table from query results
+			$tmpl = array (
+				'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+				'heading_row_start' => '<tr class="table_header">',
+				'row_start' => '<tr class="odd_row">' 
+			);
+			$this->table->set_template($tmpl); 
+			//Host Detail
+			$this->table->set_empty("&nbsp;"); 
+			$this->table->set_heading('Id','Name','Status','Space', 'Free','Last');
+			$table_row = array();
+			$table_row = NULL;
+			$table_row[] = $hosts->id;
+			$table_row[] = $hosts->name;
+			$table_row[] = $hosts->status;
+			$table_row[] = $hosts->space;
+			$table_row[] = $hosts->free;
+			$table_row[] = $hosts->stamp;
+			$this->table->add_row($table_row);
+			$hosts_table = $this->table->generate();
+			
+			//IP detail
 			/*
-			$ip_row[] = 'No Assign IP';
-			$ip_row[] = '';
-			$ip_row[] = '';
-			$ip_row[] = '';//anchor('host/ip/add/'.$hosts->id, 'Add');
+			$this->table->clear();
+			$tmpl_ip = array (
+					'table_open' => '<table id="ip" name="ip" border="1" cellpadding="4" cellspacing="2">',
+					'heading_row_start' => '<tr class="table_header">',
+					'row_start' => '<tr class="odd_row">'
+			);
+			$this->table->set_template($tmpl_ip);
+			$this->table->set_empty("&nbsp;");
+			$this->table->set_heading('IP','Vlan','Description','Actions');
+			$ip_row = array();
+			*/
+			$ip_exists=$this->MHosts->host_ip_exists($hosts->id);
+			if($ip_exists){
+				$query=$this->MHosts->get_all_host_ip($hosts->id);
+				$data['data_ip']=$query;
+				/*
+				foreach ($query->result() as $ips)
+				{
+					$ip_row = NULL;
+					$ip_row[] = $ips->ip;
+					$ip_row[] = $ips->int;
+					$ip_row[] = $ips->desc;
+					$ip_row[] = '<span style="white-space: nowrap">' .
+							anchor('host/ip/edit/'.$hosts->id.'/'. $ips->id, 'edit') . ' | ' .
+							anchor('host/ip/del/'.$hosts->id.'/'. $ips->id, 'delete',
+									"onclick=\" return confirm('Are you sure you want to '
+					+ 'delete the record for ".addslashes($ips->ip)."?')\"") .
+									'</span>';
+					$this->table->add_row($ip_row);
+				}
+				*/
+			}else{
+				$data['data_ip']=0;
+				/*
+				$ip_row[] = 'No Assign IP';
+				$ip_row[] = '';
+				$ip_row[] = '';
+				$ip_row[] = '';//anchor('host/ip/add/'.$hosts->id, 'Add');
+				$this->table->add_row($ip_row);
+				*/
+				
+			}
+			/*
+			$ip_row = NULL;
+			$ip_row[] = form_input(array('id' => 'ips'.$hosts->id,'name' => 'ips'.$hosts->id));
+			$ip_row[] = form_input(array('id' => 'vlan'.$hosts->id,'name' => 'vlan'.$hosts->id));
+			$ip_row[] = form_input(array('id' => 'desc'.$hosts->id,'name' => 'desc'.$hosts->id));
+			//$ip_row[] = anchor('host/ip/add/'.$hosts->id, 'Add');
+			$ip_row[] = form_button(array('id' => $hosts->id,'name' => 'add_ip','class'=>'add_ip'),'Add IP');
 			$this->table->add_row($ip_row);
+			$hosts_ip = $this->table->generate();
 			*/
 			
+			//$data['data_ip'] = $hosts_ip;
+			$data['host_id']=$hosts->id;
+			$data['data_table'] = $hosts_table;
+			$data['data_table'] .= '<p>'.anchor('host/','Back').'</p>';
+			$data['title']='Hosts';
+			$data['headline']='Hosts';
+			$data['include']='host_detail';//view page
+			$this->load->vars($data);
+			$this->load->view('template');
 		}
-		/*
-		$ip_row = NULL;
-		$ip_row[] = form_input(array('id' => 'ips'.$hosts->id,'name' => 'ips'.$hosts->id));
-		$ip_row[] = form_input(array('id' => 'vlan'.$hosts->id,'name' => 'vlan'.$hosts->id));
-		$ip_row[] = form_input(array('id' => 'desc'.$hosts->id,'name' => 'desc'.$hosts->id));
-		//$ip_row[] = anchor('host/ip/add/'.$hosts->id, 'Add');
-		$ip_row[] = form_button(array('id' => $hosts->id,'name' => 'add_ip','class'=>'add_ip'),'Add IP');
-		$this->table->add_row($ip_row);
-		$hosts_ip = $this->table->generate();
-		*/
-		
-		//$data['data_ip'] = $hosts_ip;
-		$data['host_id']=$hosts->id;
-		$data['data_table'] = $hosts_table;
-		$data['data_table'] .= '<p>'.anchor('host/','Back').'</p>';
-		$data['title']='Hosts';
-		$data['headline']='Hosts';
-		$data['include']='host_detail';//view page
-		$this->load->vars($data);
-		$this->load->view('template');
 	}
 	function update()
 	{

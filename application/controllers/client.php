@@ -107,7 +107,7 @@ class Client extends CI_Controller
 			{
 				$table_row[] = $salesperson->name;
 			}else{
-				$table_row[] = 'SalesPerson';
+				$table_row[] = '';
 			}
 			$table_row[] = $clients->phone;
 			$table_row[] = mailto($clients->email);

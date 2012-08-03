@@ -6,6 +6,22 @@ class MDomains extends CI_Model
 		parent::__construct();
 		$this->load->model('MClients');
 	}
+	function check_expires($id,$date_whois)
+	{
+		$row=$this->getdomain($id);
+		$cur_date=strtotime($row->expires);
+		$new_date=strtotime($date_whois);
+		// If $date_db > $date_new no update to database
+		if($cur_date <= $new_date)
+		{
+			return true;
+			//return 'Current date='.$row->expires.' <= New date='.$date_whois." = UPDATE";
+		}else{
+			return false;
+			//return 'Current date='.$row->expires.' > New date='.$date_whois." = noUPDATE";
+		}
+		
+	}
 	function get_all_client()
 	{
 		$query=$this->MClients->listall();
@@ -61,6 +77,14 @@ class MDomains extends CI_Model
 	{
 		$this->db->from('domains');
 		$this->db->where('id', $id); 
+		$query=$this->db->get();
+		$row = $query->row();
+		return $row;
+	}
+	function get_domain_detail($name)
+	{
+		$this->db->from('domains');
+		$this->db->where('name', $name);
 		$query=$this->db->get();
 		$row = $query->row();
 		return $row;

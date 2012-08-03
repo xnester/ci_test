@@ -101,7 +101,7 @@ class Domain extends CI_Controller {
 				
 		);
 		
-		if($data['name'])
+		if($this->MDomains->check_expires($id,$data['expires']))
 		{
 			$this->MDomains->updateDomain($id,$data);
 			redirect('domain/','refresh');
@@ -118,6 +118,107 @@ class Domain extends CI_Controller {
 			echo anchor('domain/','Back');		
 		}
 	}
+	function detail($name='')
+	{
+		if($name=='')
+		{
+			redirect('domain/','refresh');
+		}else{
+			$domain=$this->MDomains->get_domain_detail($name);
+			$this->load->library('table');
+			$tmpl = array (
+					'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+					'heading_row_start' => '<tr class="table_header">',
+					'row_start' => '<tr class="odd_row">'
+			);
+			$this->table->set_template($tmpl);
+			$this->table->set_empty("&nbsp;");
+			$this->table->set_heading('Id','Name','Registrar','Created', 'Expires','Changed','NServer','Status','Modified');
+			$table_row = array();
+			$table_row = NULL;
+			$table_row[] = $domain->id;
+			$table_row[] = $domain->name;
+			$table_row[] = $domain->registrar;
+			$table_row[] = $domain->created;
+			$table_row[] = $domain->expires;
+			$table_row[] = $domain->changed;
+			$table_row[] = $domain->nserver;
+			$table_row[] = $domain->status;
+			$table_row[] = $domain->stamp;
+			$this->table->add_row($table_row);
+			$domain_table = $this->table->generate();
+			$this->table->clear();
+			
+		// Clients
+			$client=$this->MDomains->get_client($domain->client_id);
+			$tmpl = array (
+					'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+					'heading_row_start' => '<tr class="table_header">',
+					'row_start' => '<tr class="odd_row">'
+			);
+			
+			$this->table->set_template($tmpl);
+			$this->table->set_empty("&nbsp;");
+			$this->table->set_heading('Customer ID','Name','Email','Phone','Status','Modified');
+			if($client)
+			{
+				$table_row = array();
+				$table_row = NULL;
+				$table_row[] = $client->cus_id;
+				$table_row[] = $client->name;
+				$table_row[] = $client->email;
+				$table_row[] = $client->phone;
+				$table_row[] = $client->status;
+				$table_row[] = $client->modified;
+				$this->table->add_row($table_row);
+			}else{	$table_row = NULL;}
+			
+			$client_table = $this->table->generate();
+			$this->table->clear();
+			
+		// Salesperson
+			if($client)
+			{
+				$dealer=$this->MClients->get_salesperson($client->dealer_id);
+			}else{
+				
+				$dealer=FALSE;
+			}
+			
+			$tmpl = array (
+					'table_open' => '<table border="1" cellpadding="4" cellspacing="2">',
+					'heading_row_start' => '<tr class="table_header">',
+					'row_start' => '<tr class="odd_row">'
+			);
+				
+			$this->table->set_template($tmpl);
+			$this->table->set_empty("&nbsp;");
+			$this->table->set_heading('Name','Email','Phone');
+			if($dealer)
+			{
+				$table_row = array();
+				$table_row = NULL;
+				$table_row[] = $client->name;
+				$table_row[] = $client->email;
+				$table_row[] = $client->phone;
+				$this->table->add_row($table_row);
+			}else{	$table_row = NULL;}
+				
+			$dealer_table = $this->table->generate();
+			$this->table->clear();
+			
+			$data['domain_table']=$domain_table;
+			$data['client_table']=$client_table;
+			$data['dealer_table']=$dealer_table;
+			
+			$data['title']=$domain->name;
+			$data['headline']=$name;
+			$data['include']='domain_detail';//view page
+			$this->load->vars($data);
+			$this->load->view('template');
+		}
+		
+	}
 	function page($offset=0)
 	{
 		$this->load->library('table');
@@ -131,7 +232,7 @@ class Domain extends CI_Controller {
 		);
 		$this->table->set_template($tmpl);
 		$this->table->set_empty("&nbsp;");
-		$this->table->set_heading('No.','Name', 'Registrar', 'Created', 'Expires', 'Changed','NS','Client','Action');
+		$this->table->set_heading('No.','Id','Name','Cus_id','Client','Sale','Registrar', 'Created', 'Expires', 'Changed','Action');
 		$table_row = array();
 		$i=1+$offset;
 		foreach ($query->result() as $domains)
@@ -139,18 +240,27 @@ class Domain extends CI_Controller {
 			$client=$this->MDomains->get_client($domains->client_id);
 			$table_row = NULL;
 			$table_row[] = $i;
-			$table_row[] = htmlspecialchars($domains->name);
+			$table_row[] = htmlspecialchars($domains->id);
+			$table_row[] = /*htmlspecialchars($domains->name);*/anchor('domain/detail/' . $domains->name, $domains->name);
+			if($client)
+			{
+				$salesperson=$this->MClients->get_salesperson($client->dealer_id);
+				$table_row[] = $client->cus_id;
+				$table_row[] = $client->name;
+				$table_row[] = $salesperson->name;
+			}else{
+				$table_row[] = '';
+				$table_row[] = '';
+				$table_row[] = '';
+				//$table_row[] = $domains->client_id;;
+			}
+			
 			$table_row[] = htmlspecialchars($domains->registrar);
 			$table_row[] = htmlspecialchars($domains->created);
 			$table_row[] = htmlspecialchars($domains->expires);
 			$table_row[] = htmlspecialchars($domains->changed);
-			$table_row[] = $domains->nserver;
-			if($client)
-			{
-				$table_row[] = $client->name;
-			}else{
-				$table_row[] = $domains->client_id;;
-			}
+			//$table_row[] = $domains->nserver;
+			
 			$table_row[] = '<span style="white-space: nowrap">' . 
 			anchor('domain/edit/' . $domains->id, 'edit') . ' | ' .
 			anchor('domain/delete/' . $domains->id, 'delete',
@@ -201,7 +311,7 @@ class Domain extends CI_Controller {
 			echo 'No id';
 		}
 	}
-		function whois($domain)
+	function whois($domain)
 	{
 		//$domain=$this->security->xss_clean($this->input->post('domain'));
 		if($domain)
@@ -221,9 +331,8 @@ class Domain extends CI_Controller {
 	}
 	
 	function index()
-	{	
-		
-		
+	{			
+		//echo $this->MDomains->check_expires(4,"2013-01-23");
 		// split page and add pagination
 		$this->page();
 

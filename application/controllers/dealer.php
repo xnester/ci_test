@@ -55,12 +55,12 @@ class Dealer extends CI_Controller
 			'email'=>$this->security->xss_clean($this->input->post('email')),
 			'phone'=>$this->security->xss_clean($this->input->post('phone'))
 		);
-	if($data['email'])
+		if($data['email'])
 		{
 			$this->MDealers->dealer_update($id,$data);
 			redirect('dealer/','refresh');
 		}else{
-			redirect('dealer/edit','refresh');
+			redirect('dealer/','refresh');
 		}
 	}
 	function index()
